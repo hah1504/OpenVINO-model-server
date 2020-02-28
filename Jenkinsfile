@@ -1,15 +1,14 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'clearlinux'
+    }
+
+  }
   stages {
     stage('test') {
       steps {
-        sh 'echo test'
-      }
-    }
-
-    stage('test2') {
-      steps {
-        sh 'echo test2'
+        sh 'echo "Hello from docker" && ls -la'
       }
     }
 
