@@ -2,41 +2,31 @@ pipeline {
     agent any
 
     stages {
-        stage('prepare virtualenv') {
-            steps {
-                sh './tests/scripts/prepare-virtualenv.sh'
+        stage('mystagename') {
+            parallel {
+                // One or more stages need to be included within the parallel block.
+                stage('clearlinux') {
+                    agent {
+                        docker {
+                            image 'clearlinux'
+                        }
+                    }
+                    steps {
+                        sh 'cat /etc/os-release'
+                    }
+                }
+
+                stage('ubuntu') {
+                    agent {
+                        docker {
+                            image 'ubuntu'
+                        }
+                    }
+                    steps {
+                        sh 'cat /etc/os-release'
+                    }
+                }
             }
         }
-
-        stage('style tests') {
-            steps {
-                sh './tests/scripts/style.sh'
-            }
-        }
-
-        stage('unit tests') {
-            steps {
-                sh './tests/scripts/unit-tests.sh'
-            }
-        }
-
-        stage('functional tests bin') {
-            steps {
-                sh './tests/scripts/functional-tests-bin.sh'
-            }
-        }
-
-        stage('functional tests apt ubuntu') {
-            steps {
-                sh './tests/scripts/functional-tests-apt-ubuntu.sh'
-            }
-        }
-
-        stage('functional tests clearlinux') {
-            steps {
-                sh './tests/scripts/functional-tests-clearlinux.sh'
-            }
-        }
-
     }
 }
